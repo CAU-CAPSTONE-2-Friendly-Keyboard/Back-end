@@ -39,6 +39,8 @@ def sign_up():
         # 데이터베이스 내부의 데이터에 영향을 주는 함수의 경우 commit()이 필요함.
         db.commit()
         
+        return '회원가입이 완료되었습니다.'
+        
 
 # 특정 아이디가 이미 존재하는지 확인
 @app.route('/get_account', methods=['POST'])
@@ -59,9 +61,9 @@ def get_account():
         result = cursor.fetchone() 
         
         if id in result:
-            return jsonify({'answer': '중복된 아이디입니다.'})
+            return '중복된 아이디입니다.'
         else:
-            return jsonify({'answer': '사용가능한 아이디입니다.'})
+            return '사용가능한 아이디입니다.'
 
 
 if __name__ == '__main__':
