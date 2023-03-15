@@ -2,17 +2,6 @@ from flask import Flask, session, render_template, redirect, request, url_for, j
 import pymysql
 
 app = Flask(__name__)
-
-# 데이터베이스에 접근
-db = pymysql.connect(host='localhost',
-                   port=3306,
-                   user='root',
-                   password='12345',
-                   db='friendly_keyboard_accounts',
-                   charset='utf8')
-
-# 데이터베이스를 사용하기 위한 cursor을 세팅.
-cursor = db.cursor()
         
 @app.route('/', methods=['GET'])
 def home():
@@ -26,6 +15,17 @@ def sign_up():
         account_data = request.get_json()
         id = account_data['id']
         password = account_data['password']
+        
+        # 데이터베이스에 접근
+        db = pymysql.connect(host='localhost',
+                           port=3306,
+                           user='root',
+                           password='12345',
+                           db='friendly_keyboard_accounts',
+                           charset='utf8')
+
+        # 데이터베이스를 사용하기 위한 cursor을 세팅.
+        cursor = db.cursor()
         
         # SQL query 작성
         # INSERT
@@ -49,6 +49,17 @@ def get_account():
         # JSON 형식으로 데이터 받기
         account_data = request.get_json()
         id = account_data['id']
+        
+        # 데이터베이스에 접근
+        db = pymysql.connect(host='localhost',
+                           port=3306,
+                           user='root',
+                           password='12345',
+                           db='friendly_keyboard_accounts',
+                           charset='utf8')
+
+        # 데이터베이스를 사용하기 위한 cursor을 세팅.
+        cursor = db.cursor()
         
         # SQL query 작성
         # SELECT
