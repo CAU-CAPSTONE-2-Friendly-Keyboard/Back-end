@@ -7,7 +7,7 @@ app = Flask(__name__)
 db = pymysql.connect(host='localhost',
                    port=3306,
                    user='root',
-                   password='비밀번호 작성할 것!', # TODO: 비밀번호 작성할 것! 
+                   password='비밀번호 작성할 것', # TODO: 비밀번호 작성할 것! 
                    db='friendly_keyboard_accounts',
                    charset='utf8')
 
@@ -67,4 +67,4 @@ def get_account():
 
 
 if __name__ == '__main__':
-    app.run('0.0.0.0', port = 5000, debug = True)
+    app.run('0.0.0.0', port = 5000)
