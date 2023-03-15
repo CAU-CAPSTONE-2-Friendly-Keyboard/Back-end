@@ -7,7 +7,7 @@ app = Flask(__name__)
 db = pymysql.connect(host='localhost',
                    port=3306,
                    user='root',
-                   password='비밀번호 작성할 것', # TODO: 비밀번호 작성할 것! 
+                   password='12345',
                    db='friendly_keyboard_accounts',
                    charset='utf8')
 
