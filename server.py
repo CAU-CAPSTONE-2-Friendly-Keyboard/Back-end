@@ -39,7 +39,7 @@ def sign_up():
         # 데이터베이스 내부의 데이터에 영향을 주는 함수의 경우 commit()이 필요함.
         db.commit()
         
-        return jsonify({'responseText': '회원가입이 완료되었습니다.'})
+        return jsonify({'responseText': 'Signing up is successful!'})
         
 
 # 특정 아이디가 이미 존재하는지 확인
@@ -63,7 +63,7 @@ def get_account():
         
         # SQL query 작성
         # SELECT
-        sql = 'SELECT * FROM accounts WHERE id = %s' % (id)
+        sql = "SELECT * FROM accounts WHERE id = '%s'" % (id)
         
         # SQL query 실행
         cursor.execute(sql)
@@ -71,11 +71,10 @@ def get_account():
         # SQL query 실행 결과를 가져옴
         result = cursor.fetchone() 
         
-        if id in result:
-            return jsonify({'responseText': '중복된 아이디입니다.'})
+        if str(type(result)) == "<class 'NoneType'>":
+            return jsonify({'responseText': "'%s' can be used." % id})
         else:
-            return jsonify({'responseText': '사용가능한 아이디입니다.'})
-
+            return jsonify({'responseText': "'%s' is already used." % id})
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port = 5000)
