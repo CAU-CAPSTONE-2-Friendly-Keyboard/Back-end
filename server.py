@@ -36,9 +36,9 @@ def get_account():
         result = cursor.fetchone() 
         
         if str(type(result)) == "<class 'NoneType'>":
-            return jsonify({'responseText': "'%s' can be used." % account_id})
+            return jsonify({'responseText': "Available"})
         else:
-            return jsonify({'responseText': "'%s' is already used." % account_id})
+            return jsonify({'responseText': "Unavailable"})
 
 # 회원가입시 데이터베이스에 계정 데이터 추가
 @app.route('/sign-up', methods=['POST'])
@@ -71,7 +71,7 @@ def sign_up():
         # 데이터베이스 내부의 데이터에 영향을 주는 함수의 경우 commit()이 필요함.
         db.commit()
         
-        return jsonify({'responseText': 'Signing up is successful!'})
+        return jsonify({'responseText': 'Success'})
         
 if __name__ == '__main__':
     app.run('0.0.0.0', port = 5000)
