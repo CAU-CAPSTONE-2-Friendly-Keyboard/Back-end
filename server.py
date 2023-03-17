@@ -12,8 +12,7 @@ def home():
 def get_account():
     if request.method == 'POST':
         # JSON 형식으로 데이터 받기
-        account_data = request.get_json()
-        id = account_data['id']
+        account_id = request.args.get('id')
         
         # 데이터베이스에 접근
         db = pymysql.connect(host='localhost',
@@ -28,7 +27,7 @@ def get_account():
         
         # SQL query 작성
         # SELECT
-        sql = "SELECT * FROM accounts WHERE id = '%s'" % (id)
+        sql = "SELECT * FROM accounts WHERE id = '%s'" % (account_id)
         
         # SQL query 실행
         cursor.execute(sql)
@@ -37,18 +36,17 @@ def get_account():
         result = cursor.fetchone() 
         
         if str(type(result)) == "<class 'NoneType'>":
-            return jsonify({'responseText': "'%s' can be used." % id})
+            return jsonify({'responseText': "'%s' can be used." % account_id})
         else:
-            return jsonify({'responseText': "'%s' is already used." % id})
+            return jsonify({'responseText': "'%s' is already used." % account_id})
 
 # 회원가입시 데이터베이스에 계정 데이터 추가
 @app.route('/sign-up', methods=['POST'])
 def sign_up():
     if request.method == 'POST':
         # JSON 형식으로 데이터 받기
-        account_data = request.get_json()
-        id = account_data['id']
-        password = account_data['password']
+        account_id = request.args.get('key')
+        password = request.args.get('password')
         
         # 데이터베이스에 접근
         db = pymysql.connect(host='localhost',
@@ -63,7 +61,7 @@ def sign_up():
         
         # SQL query 작성
         # INSERT
-        sql = "INSERT INTO accounts (id, password) VALUES ('%s', '%s')" % (id, password)
+        sql = "INSERT INTO accounts (id, password) VALUES ('%s', '%s')" % (account_id, password)
         
         # SQL query 실행
         cursor.execute(sql)
