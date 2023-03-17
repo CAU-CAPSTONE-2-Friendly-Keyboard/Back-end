@@ -90,9 +90,9 @@ def sign_in():
         result = cursor.fetchone() 
         
         if str(type(result)) == "<class 'NoneType'>":
-            return jsonify({'responseText': "Available"})
-        else:
             return jsonify({'responseText': "Unavailable"})
+        else:
+            return jsonify({'responseText': "Available"})
         
         
 if __name__ == '__main__':
