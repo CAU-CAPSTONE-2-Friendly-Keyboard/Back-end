@@ -45,7 +45,7 @@ def get_account():
 def sign_up():
     if request.method == 'POST':
         # JSON 형식으로 데이터 받기
-        account_id = request.args.get('key')
+        account_id = request.args.get('id')
         password = request.args.get('password')
         
         # 데이터베이스에 접근
