@@ -69,7 +69,7 @@ def sign_up():
         return jsonify({'responseText': 'Success'})
     
 # 로그인 시 아이디와 비밀번호가 올바른지 확인
-@app.route('/sign-in', method=['POST'])
+@app.route('/sign-in', methods=['POST'])
 def sign_in():
     if request.method == 'POST':
         global db, cursor
