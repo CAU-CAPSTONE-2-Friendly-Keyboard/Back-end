@@ -28,6 +28,17 @@ def get_account():
         account_data = request.get_json()
         account_id = account_data['id']
         
+        # 데이터베이스에 접근
+        db = pymysql.connect(host='localhost',
+                           port=3306,
+                           user='root',
+                           password='12345',
+                           db='friendly_keyboard_accounts',
+                           charset='utf8')
+
+        # 데이터베이스를 사용하기 위한 cursor을 세팅.
+        cursor = db.cursor()
+        
         # SQL query 작성
         # SELECT
         sql = "SELECT * FROM accounts WHERE id = '%s'" % (account_id)
@@ -54,6 +65,17 @@ def sign_up():
         account_id = account_data['id']
         password = account_data['password']
         
+        # 데이터베이스에 접근
+        db = pymysql.connect(host='localhost',
+                           port=3306,
+                           user='root',
+                           password='12345',
+                           db='friendly_keyboard_accounts',
+                           charset='utf8')
+
+        # 데이터베이스를 사용하기 위한 cursor을 세팅.
+        cursor = db.cursor()
+        
         # SQL query 작성
         # INSERT
         sql = "INSERT INTO accounts (id, password) VALUES ('%s', '%s')" % (account_id, password)
@@ -78,6 +100,17 @@ def sign_in():
         account_data = request.get_json()
         account_id = account_data['id']
         password = account_data['password']
+        
+        # 데이터베이스에 접근
+        db = pymysql.connect(host='localhost',
+                           port=3306,
+                           user='root',
+                           password='12345',
+                           db='friendly_keyboard_accounts',
+                           charset='utf8')
+
+        # 데이터베이스를 사용하기 위한 cursor을 세팅.
+        cursor = db.cursor()
         
         # SQL query 작성
         # SELECT
