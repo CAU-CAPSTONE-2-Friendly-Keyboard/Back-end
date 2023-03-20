@@ -13,6 +13,21 @@ db = pymysql.connect(host='localhost',
 
 # 데이터베이스를 사용하기 위한 cursor을 세팅.
 cursor = db.cursor()
+
+def connectDB():
+    global db, cursor
+    
+    # 데이터베이스에 접근
+    db = pymysql.connect(host='localhost',
+                       port=3306,
+                       user='root',
+                       password='12345',
+                       db='friendly_keyboard_accounts',
+                       charset='utf8')
+
+    # 데이터베이스를 사용하기 위한 cursor을 세팅.
+    cursor = db.cursor()
+    
         
 @app.route('/', methods=['GET'])
 def home():
@@ -28,16 +43,7 @@ def get_account():
         account_data = request.get_json()
         account_id = account_data['id']
         
-        # 데이터베이스에 접근
-        db = pymysql.connect(host='localhost',
-                           port=3306,
-                           user='root',
-                           password='12345',
-                           db='friendly_keyboard_accounts',
-                           charset='utf8')
-
-        # 데이터베이스를 사용하기 위한 cursor을 세팅.
-        cursor = db.cursor()
+        connectDB()
         
         # SQL query 작성
         # SELECT
@@ -65,16 +71,7 @@ def sign_up():
         account_id = account_data['id']
         password = account_data['password']
         
-        # 데이터베이스에 접근
-        db = pymysql.connect(host='localhost',
-                           port=3306,
-                           user='root',
-                           password='12345',
-                           db='friendly_keyboard_accounts',
-                           charset='utf8')
-
-        # 데이터베이스를 사용하기 위한 cursor을 세팅.
-        cursor = db.cursor()
+        connectDB()
         
         # SQL query 작성
         # INSERT
@@ -101,16 +98,7 @@ def sign_in():
         account_id = account_data['id']
         password = account_data['password']
         
-        # 데이터베이스에 접근
-        db = pymysql.connect(host='localhost',
-                           port=3306,
-                           user='root',
-                           password='12345',
-                           db='friendly_keyboard_accounts',
-                           charset='utf8')
-
-        # 데이터베이스를 사용하기 위한 cursor을 세팅.
-        cursor = db.cursor()
+        connectDB()
         
         # SQL query 작성
         # SELECT
