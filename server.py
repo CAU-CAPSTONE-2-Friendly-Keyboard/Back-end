@@ -1,5 +1,6 @@
 from flask import Flask, session, render_template, redirect, request, url_for, jsonify
 import pymysql
+from inference import loadModel, get_inference_hate_speech
 
 app = Flask(__name__)
 
@@ -114,7 +115,21 @@ def sign_in():
             return jsonify({'responseText': "Unavailable"})
         else:
             return jsonify({'responseText': "Available"})
+    
+# 입력한 문자열에 혐오 표현 존재 여부 확인
+@app.route('/inference_hate_speech', method=['POST'])
+def inference_hate_speech():
+    if request.method == 'POST':
+        # JSON 형식으로 데이터 받기
+        text = request.get_json()['text']
+        
+        # 혐오 표현 존재 여부 확인
+        # result == 'clean' or 'notClean'
+        result = get_inference_hate_speech(text)
+        
+        return jsonify({'inference_hate_speech_result': result})
         
         
 if __name__ == '__main__':
+    loadModel()
     app.run('0.0.0.0', port = 5000)
