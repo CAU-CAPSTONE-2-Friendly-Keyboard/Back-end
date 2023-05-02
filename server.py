@@ -117,7 +117,7 @@ def sign_in():
             return jsonify({'responseText': "Available"})
     
 # 입력한 문자열에 혐오 표현 존재 여부 확인
-@app.route('/inference_hate_speech', method=['POST'])
+@app.route('/inference_hate_speech', methods=['POST'])
 def inference_hate_speech():
     if request.method == 'POST':
         # JSON 형식으로 데이터 받기
