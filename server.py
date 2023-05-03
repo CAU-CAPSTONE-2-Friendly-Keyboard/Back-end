@@ -71,12 +71,13 @@ def sign_up():
         account_data = request.get_json()
         account_id = account_data['id']
         password = account_data['password']
+        hate_speech_count = 0
         
         connectDB()
         
         # SQL query 작성
         # INSERT
-        sql = "INSERT INTO accounts (id, password) VALUES ('%s', '%s')" % (account_id, password)
+        sql = "INSERT INTO accounts (id, password, hate_speech_count) VALUES ('%s', '%s', '%d')" % (account_id, password, hate_speech_count)
         
         # SQL query 실행
         cursor.execute(sql)
