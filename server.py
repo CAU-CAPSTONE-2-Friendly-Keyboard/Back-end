@@ -54,7 +54,7 @@ def get_account():
         cursor.execute(sql)
         
         # SQL query 실행 결과를 가져옴
-        result = cursor.fetchone() 
+        result = cursor.fetchone()
         
         if str(type(result)) == "<class 'NoneType'>":
             return jsonify({'responseText': "Available"})
@@ -121,15 +121,45 @@ def sign_in():
 @app.route('/inference_hate_speech', methods=['POST'])
 def inference_hate_speech():
     if request.method == 'POST':
+        global db, cursor
+        
         # JSON 형식으로 데이터 받기
-        text = request.get_json()['text']
+        data = request.get_json()
+        account_id = data['id']
+        text = data['text']
         
         # 혐오 표현 존재 여부 확인
         # result == 'clean' or 'notClean'
         result = get_inference_hate_speech(text)
         
-        return jsonify({'inference_hate_speech_result': result})
+        if (result == 'notClean'):
+            connectDB()
+            
+            # SQL query 작성
+            # SELECT
+            sql = "SELECT hate_speech_count FROM accounts WHERE id = '%s'" % (account_id)
+            
+            # SQL query 실행
+            cursor.execute(sql)
+            
+            # SQL query 실행 결과를 가져옴
+            # hate_speech_count의 값을 1 증가시킴.
+            hate_speech_count = cursor.fetchone()['hate_speech_count'] + 1
+            
+            # SQL query 작성
+            # UPDATE
+            sql = "UPDATE accounts SET hate_speech_count = '%d' WHERE id = '%s'" % (hate_speech_count, account_id);
+            
+            # SQL query 실행
+            cursor.execute(sql)
+            
+            # 데이터 변화 적용
+            # CREATE 또는 DROP, DELETE, UPDATE, INSERT와 같이
+            # 데이터베이스 내부의 데이터에 영향을 주는 함수의 경우 commit()이 필요함.
+            db.commit()
         
+        return jsonify({'inference_hate_speech_result': result,
+                        'hate_speech_count': hate_speech_count})
         
 if __name__ == '__main__':
     loadModel()
