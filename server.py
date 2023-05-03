@@ -132,7 +132,7 @@ def inference_hate_speech():
         # result == 'clean' or 'notClean'
         result = get_inference_hate_speech(text)
         
-        if (result == 'notClean'):
+        if result == 'notClean':
             connectDB()
             
             # SQL query 작성
