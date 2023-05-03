@@ -132,6 +132,8 @@ def inference_hate_speech():
         # result == 'clean' or 'notClean'
         result = get_inference_hate_speech(text)
         
+        hate_speech_count = 0
+        
         if result == 'notClean':
             connectDB()
             
