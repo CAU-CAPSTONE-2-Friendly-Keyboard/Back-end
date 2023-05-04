@@ -156,7 +156,7 @@ def inference_hate_speech():
         
         hate_speech_count = 0
         
-        if result == 'notClean':
+        if result != 'clean':
             connectDB()
             
             # SQL query 작성
