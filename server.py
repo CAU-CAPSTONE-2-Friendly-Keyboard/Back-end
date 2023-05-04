@@ -1,10 +1,10 @@
 from flask import Flask, session, render_template, redirect, request, url_for, jsonify
 import pymysql
 from inference import loadModel, get_inference_hate_speech
+from datetime import datetime
 
 app = Flask(__name__)
 
-# 데이터베이스에 접근
 db = pymysql.connect(host='localhost',
                    port=3306,
                    user='root',
@@ -12,7 +12,6 @@ db = pymysql.connect(host='localhost',
                    db='friendly_keyboard_accounts',
                    charset='utf8')
 
-# 데이터베이스를 사용하기 위한 cursor을 세팅.
 cursor = db.cursor()
 
 def connectDB():
@@ -101,7 +100,6 @@ def sign_up():
             `count7` INT NOT NULL,
             `count8` INT NOT NULL,
             `count9` INT NOT NULL,
-            `count10` INT NOT NULL,
             PRIMARY KEY(`index`)
             ) CHARSET=utf8;
         """ % (account_id)
@@ -151,10 +149,7 @@ def inference_hate_speech():
         text = data['text']
         
         # 혐오 표현 존재 여부 확인
-        # result == 'clean' or 'notClean'
         result = get_inference_hate_speech(text)
-        
-        hate_speech_count = 0
         
         if result != 'clean':
             connectDB()
@@ -181,9 +176,47 @@ def inference_hate_speech():
             # CREATE 또는 DROP, DELETE, UPDATE, INSERT와 같이
             # 데이터베이스 내부의 데이터에 영향을 주는 함수의 경우 commit()이 필요함.
             db.commit()
+            
+            count = 0
+            date = str(datetime.now().date())
+            sql = "SELECT * FROM %s_dateTable WHERE date = '%s'" % (account_id, date)
+            cursor.execute(sql)
+            row = cursor.fetchone()
+            
+            if str(type(row)) == "<class 'NoneType'>":
+                sql = """INSERT INTO %s_dateTable (date, count1, count2,
+                count3, count4, count5, count6, count7, count8, count9) VALUES
+                ('%s', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d')
+                """ % (account_id, date, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+                cursor.execute(sql)
+                db.commit()
+                count = 1
+            else:
+                count = row[result] + 1
+            
+            if result == '여성/가족':
+                sql = "UPDATE %s_dateTable SET count1 = '%d' WHERE date = '%s'" % (account_id, count, date)
+            elif result == '남성':
+                sql = "UPDATE %s_dateTable SET count2 = '%d' WHERE date = '%s'" % (account_id, count, date)
+            elif result == '성소수자':
+                sql = "UPDATE %s_dateTable SET count3 = '%d' WHERE date = '%s'" % (account_id, count, date)
+            elif result == '인종/국적':
+                sql = "UPDATE %s_dateTable SET count4 = '%d' WHERE date = '%s'" % (account_id, count, date)
+            elif result == '연령':
+                sql = "UPDATE %s_dateTable SET count5 = '%d' WHERE date = '%s'" % (account_id, count, date)
+            elif result == '지역':
+                sql = "UPDATE %s_dateTable SET count6 = '%d' WHERE date = '%s'" % (account_id, count, date)
+            elif result == '종교':
+                sql = "UPDATE %s_dateTable SET count7 = '%d' WHERE date = '%s'" % (account_id, count, date)
+            elif result == '기타 혐오':
+                sql = "UPDATE %s_dateTable SET count8 = '%d' WHERE date = '%s'" % (account_id, count, date)
+            else: # result == '악플/욕설'
+                sql = "UPDATE %s_dateTable SET count9 = '%d' WHERE date = '%s'" % (account_id, count, date)
+            
+            cursor.execute(sql)
+            db.commit()
         
-        return jsonify({'inference_hate_speech_result': result,
-                        'hate_speech_count': hate_speech_count})
+        return jsonify({'inference_hate_speech_result': result})
         
 if __name__ == '__main__':
     loadModel()
