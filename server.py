@@ -87,6 +87,28 @@ def sign_up():
         # 데이터베이스 내부의 데이터에 영향을 주는 함수의 경우 commit()이 필요함.
         db.commit()
         
+        # SQL query 작성
+        # CREATE
+        sql = """CREATE TABLE %s_dateTable(
+            `index` INT NOT NULL AUTO_INCREMENT,
+            `date` VARCHAR(255) NOT NULL,
+            `count1` INT NOT NULL,
+            `count2` INT NOT NULL,
+            `count3` INT NOT NULL,
+            `count4` INT NOT NULL,
+            `count5` INT NOT NULL,
+            `count6` INT NOT NULL,
+            `count7` INT NOT NULL,
+            `count8` INT NOT NULL,
+            `count9` INT NOT NULL,
+            `count10` INT NOT NULL,
+            PRIMARY KEY(`index`)
+            ) CHARSET=utf8;
+        """ % (account_id)
+        
+        cursor.execute(sql)
+        db.commit()
+        
         return jsonify({'responseText': 'Success'})
     
 # 로그인 시 아이디와 비밀번호가 올바른지 확인
