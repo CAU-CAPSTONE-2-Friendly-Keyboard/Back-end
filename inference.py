@@ -54,10 +54,12 @@ def get_inference_hate_speech(text):
     
     out = get_predicated_label(pipe(text)[0], 0.5)
     result = ''
+    index = 0
     
     for key in out:
+        index += 1
         if out[key] == 1:
             result = key
             break
     
-    return result
+    return {'result': result, 'index': index}

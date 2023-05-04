@@ -149,7 +149,9 @@ def inference_hate_speech():
         text = data['text']
         
         # 혐오 표현 존재 여부 확인
-        result = get_inference_hate_speech(text)
+        out = get_inference_hate_speech(text)
+        result = out['result']
+        index = out['index'] # 1 ~ 10
         
         if result != 'clean':
             connectDB()
@@ -163,7 +165,7 @@ def inference_hate_speech():
             
             # SQL query 실행 결과를 가져옴
             # hate_speech_count의 값을 1 증가시킴.
-            hate_speech_count = cursor.fetchone()['hate_speech_count'] + 1
+            hate_speech_count = cursor.fetchone()[0] + 1
             
             # SQL query 작성
             # UPDATE
@@ -192,26 +194,9 @@ def inference_hate_speech():
                 db.commit()
                 count = 1
             else:
-                count = row[result] + 1
+                count = row[index + 1] + 1
             
-            if result == '여성/가족':
-                sql = "UPDATE %s_dateTable SET count1 = '%d' WHERE date = '%s'" % (account_id, count, date)
-            elif result == '남성':
-                sql = "UPDATE %s_dateTable SET count2 = '%d' WHERE date = '%s'" % (account_id, count, date)
-            elif result == '성소수자':
-                sql = "UPDATE %s_dateTable SET count3 = '%d' WHERE date = '%s'" % (account_id, count, date)
-            elif result == '인종/국적':
-                sql = "UPDATE %s_dateTable SET count4 = '%d' WHERE date = '%s'" % (account_id, count, date)
-            elif result == '연령':
-                sql = "UPDATE %s_dateTable SET count5 = '%d' WHERE date = '%s'" % (account_id, count, date)
-            elif result == '지역':
-                sql = "UPDATE %s_dateTable SET count6 = '%d' WHERE date = '%s'" % (account_id, count, date)
-            elif result == '종교':
-                sql = "UPDATE %s_dateTable SET count7 = '%d' WHERE date = '%s'" % (account_id, count, date)
-            elif result == '기타 혐오':
-                sql = "UPDATE %s_dateTable SET count8 = '%d' WHERE date = '%s'" % (account_id, count, date)
-            else: # result == '악플/욕설'
-                sql = "UPDATE %s_dateTable SET count9 = '%d' WHERE date = '%s'" % (account_id, count, date)
+            sql = "UPDATE %s_dateTable SET count%d = '%d' WHERE date = '%s'" % (account_id, index, count, date)
             
             cursor.execute(sql)
             db.commit()
