@@ -202,7 +202,56 @@ def inference_hate_speech():
             db.commit()
         
         return jsonify({'inference_hate_speech_result': result})
+    
+# 특정 계정의 혐오 표현 사용 횟수 가져오기.
+@app.route('/get_hate_speech_counts', methods=['POST'])
+def get_hate_speech_counts():
+    if request.method == 'POST':
+        global db, cursor
         
+        data = request.get_json()
+        account_id = data['id']
+        
+        connectDB()
+        
+        sql = 'SELECT * FROM %s_dateTable' % (account_id)
+        cursor.execute(sql)
+        result = cursor.fetchall()
+        
+        count1 = {}
+        count2 = {}
+        count3 = {}
+        count4 = {}
+        count5 = {}
+        count6 = {}
+        count7 = {}
+        count8 = {}
+        count9 = {}
+        
+        if str(type(result)) != "<class 'NoneType'>":
+            for row in result:
+                count1[row[1]] = row[2]
+                count2[row[1]] = row[3]
+                count3[row[1]] = row[4]
+                count4[row[1]] = row[5]
+                count5[row[1]] = row[6]
+                count6[row[1]] = row[7]
+                count7[row[1]] = row[8]
+                count8[row[1]] = row[9]
+                count9[row[1]] = row[10]
+            
+        return jsonify({
+            'count1': count1,
+            'count2': count2,
+            'count3': count3,
+            'count4': count4,
+            'count5': count5,
+            'count6': count6,
+            'count7': count7,
+            'count8': count8,
+            'count9': count9
+            })
+
 if __name__ == '__main__':
     loadModel()
     app.run('0.0.0.0', port = 5000)
