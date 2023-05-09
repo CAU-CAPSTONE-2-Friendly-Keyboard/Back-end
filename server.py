@@ -136,7 +136,7 @@ def sign_in():
             return jsonify({'responseText': "Unavailable"})
         else:
             return jsonify({'responseText': "Available"})
-    
+
 # 입력한 문자열에 혐오 표현 존재 여부 확인
 @app.route('/inference_hate_speech', methods=['POST'])
 def inference_hate_speech():
@@ -202,8 +202,26 @@ def inference_hate_speech():
             db.commit()
         
         return jsonify({'inference_hate_speech_result': result})
-    
-# 특정 계정의 혐오 표현 사용 횟수 가져오기.
+
+# 특정 계정의 혐오 표현 사용 전제 횟수 가져오기.
+@app.route('/get_hate_speech_counts_sum', methods=['POST'])
+def get_hate_speech_counts_sum():
+    if request.method == 'POST':
+        global db, cursor
+        
+        data = request.get_json()
+        account_id = data['id']
+        
+        connectDB()
+        
+        sql = "SELECT hate_speech_count FROM accounts WHERE id = '%s'" % (account_id)
+        cursor.execute(sql)
+        result = cursor.fetchone()[0]
+        
+        return jsonify({'result': result})
+        
+
+# 특정 계정의 날짜별 혐오 표현 사용 횟수 가져오기.
 @app.route('/get_hate_speech_counts', methods=['POST'])
 def get_hate_speech_counts():
     if request.method == 'POST':
