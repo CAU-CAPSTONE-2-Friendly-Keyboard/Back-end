@@ -203,7 +203,7 @@ def inference_hate_speech():
         
         return jsonify({'inference_hate_speech_result': result})
 
-# 특정 계정의 혐오 표현 사용 전제 횟수 가져오기.
+# 특정 계정의 혐오 표현 전체 사용 횟수 가져오기.
 @app.route('/get_hate_speech_counts_sum', methods=['POST'])
 def get_hate_speech_counts_sum():
     if request.method == 'POST':
@@ -219,7 +219,6 @@ def get_hate_speech_counts_sum():
         result = cursor.fetchone()[0]
         
         return jsonify({'result': result})
-        
 
 # 특정 계정의 날짜별 혐오 표현 사용 횟수 가져오기.
 @app.route('/get_hate_speech_counts', methods=['POST'])
