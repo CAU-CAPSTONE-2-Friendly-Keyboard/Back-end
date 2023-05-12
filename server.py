@@ -111,7 +111,7 @@ def sign_up():
             `index` INT NOT NULL AUTO_INCREMENT,
             `id` INT NOT NULL,
             `text` VARCHAR(255) NOT NULL,
-            `date' VARCHAR(255) NOT NULL,
+            `date` VARCHAR(255) NOT NULL,
             PRIMARY KEY(`index`)
             ) CHARSET=utf8;
         """ % (account_id)
