@@ -116,6 +116,9 @@ def sign_up():
         ) CHARSET=utf8;
         """ % (account_id)
         
+        cursor.execute(sql)
+        db.commit()
+        
         return jsonify({'responseText': 'Success'})
     
 # 로그인 시 아이디와 비밀번호가 올바른지 확인
