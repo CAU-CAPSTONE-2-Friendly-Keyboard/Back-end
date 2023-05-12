@@ -108,12 +108,12 @@ def sign_up():
         db.commit()
         
         sql = """CREATE TABLE %s_chatTable(
-        `index` INT NOT NULL AUTO_INCREMENT,
-        `id` INT NOT NULL,
-        `text` VARCHAR(255) NOT NULL,
-        'date' VARCHAR(255) NOT NULL,
-        PRIMARY KEY(`index`)
-        ) CHARSET=utf8;
+            `index` INT NOT NULL AUTO_INCREMENT,
+            `id` INT NOT NULL,
+            `text` VARCHAR(255) NOT NULL,
+            `date' VARCHAR(255) NOT NULL,
+            PRIMARY KEY(`index`)
+            ) CHARSET=utf8;
         """ % (account_id)
         
         cursor.execute(sql)
