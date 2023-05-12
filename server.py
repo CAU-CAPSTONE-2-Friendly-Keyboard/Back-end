@@ -107,6 +107,15 @@ def sign_up():
         cursor.execute(sql)
         db.commit()
         
+        sql = """CREATE TABLE %s_chatTable(
+        `index` INT NOT NULL AUTO_INCREMENT,
+        `id` INT NOT NULL,
+        `text` VARCHAR(255) NOT NULL,
+        'date' VARCHAR(255) NOT NULL,
+        PRIMARY KEY(`index`)
+        ) CHARSET=utf8;
+        """ % (account_id)
+        
         return jsonify({'responseText': 'Success'})
     
 # 로그인 시 아이디와 비밀번호가 올바른지 확인
@@ -268,6 +277,60 @@ def get_hate_speech_counts():
             'count8': count8,
             'count9': count9
             })
+    
+
+# 특정 계정의 채팅 내용 저장하기.
+@app.route('/save_chat_list', methods=['POST'])
+def save_chat_list():
+    if request.method == 'POST':
+        global db, cursor
+        
+        data = request.get_json()
+        account_id = data['id']
+        chat_list = data['chat_list']
+        
+        connectDB()
+        
+        for chat in chat_list:
+            sql = """INSERT INTO %s_chatTable (id, text, date) VALUES
+            ('%d', '%s', '%s') 
+            """ % (account_id, chat[0], chat[1], chat[2])
+            cursor.execute(sql)
+            db.commit()
+            
+        return jsonify({'result': 'success'})
+
+# 특정 계정의 채팅 내용 가져오기.
+@app.route('/get_chat_list', methods=['POST'])
+def get_chat_list():
+    if request.method == 'POST':
+        global db, cursor
+        
+        data = request.get_json()
+        account_id = data['id']
+        
+        connectDB()
+        
+        sql = 'SELECT * FROM %s_chatTable' % (account_id)
+        cursor.execute(sql)
+        result = cursor.fetchall()
+        
+        id_list = []
+        text_list = []
+        date_list = []
+        
+        if str(type(result)) != "<class 'NoneType'>":
+            for row in result:
+                id_list.append(row[0])
+                text_list.append(row[1])
+                date_list.append(row[2])
+                
+        return jsonify({
+            'id_list': id_list,
+            'text_list': text_list,
+            'date_list': date_list,
+            })
+        
 
 if __name__ == '__main__':
     loadModel()
