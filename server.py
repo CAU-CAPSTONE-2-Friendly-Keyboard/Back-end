@@ -325,9 +325,9 @@ def get_chat_list():
         
         if str(type(result)) != "<class 'NoneType'>":
             for row in result:
-                id_list.append(row[0])
-                text_list.append(row[1])
-                date_list.append(row[2])
+                id_list.append(row[1])
+                text_list.append(row[2])
+                date_list.append(row[3])
                 
         return jsonify({
             'id_list': id_list,
