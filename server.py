@@ -283,8 +283,8 @@ def get_hate_speech_counts():
     
 
 # 특정 계정의 채팅 내용 저장하기.
-@app.route('/save_chat_list', methods=['POST'])
-def save_chat_list():
+@app.route('/save_chat', methods=['POST'])
+def save_chat():
     if request.method == 'POST':
         global db, cursor
         
