@@ -289,19 +289,20 @@ def save_chat_list():
         global db, cursor
         
         data = request.get_json()
-        account_id = data['id']
-        chat_list = data['chat_list']
+        account_id = data['account_id']
+        id = data['id']
+        text = data['text']
+        date = data['date']
         
         connectDB()
         
-        for chat in chat_list:
-            sql = """INSERT INTO %s_chatTable (id, text, date) VALUES
+        sql = """INSERT INTO %s_chatTable (id, text, date) VALUES
             ('%d', '%s', '%s') 
-            """ % (account_id, chat[0], chat[1], chat[2])
-            cursor.execute(sql)
-            db.commit()
+            """ % (account_id, id, text, date)
+        cursor.execute(sql)
+        db.commit()
             
-        return jsonify({'result': 'success'})
+        return "Success"
 
 # 특정 계정의 채팅 내용 가져오기.
 @app.route('/get_chat_list', methods=['POST'])
@@ -333,7 +334,6 @@ def get_chat_list():
             'text_list': text_list,
             'date_list': date_list,
             })
-        
 
 if __name__ == '__main__':
     loadModel()
