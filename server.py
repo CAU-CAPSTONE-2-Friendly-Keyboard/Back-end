@@ -1,7 +1,8 @@
-from flask import Flask, session, render_template, redirect, request, url_for, jsonify
+from flask import Flask, request, jsonify
 import pymysql
-from inference import loadModel, get_inference_hate_speech
 from datetime import datetime
+from inference import loadModel, get_inference_hate_speech
+from badwords_filtering import get_data, bad2star
 
 app = Flask(__name__)
 
@@ -159,6 +160,7 @@ def inference_hate_speech():
         data = request.get_json()
         account_id = data['id']
         text = data['text']
+        masking_option = data['masking_option']
         
         # 혐오 표현 존재 여부 확인
         out = get_inference_hate_speech(text)
@@ -212,8 +214,14 @@ def inference_hate_speech():
             
             cursor.execute(sql)
             db.commit()
-        
-        return jsonify({'inference_hate_speech_result': result})
+            
+            if masking_option == True:
+                text, used_badwords = bad2star(text)
+            
+        return jsonify({
+            'inference_hate_speech_result': result,
+            'text': text
+            })
 
 # 특정 계정의 혐오 표현 전체 사용 횟수 가져오기.
 @app.route('/get_hate_speech_counts_sum', methods=['POST'])
@@ -337,4 +345,5 @@ def get_chat_list():
 
 if __name__ == '__main__':
     loadModel()
+    get_data('KO')
     app.run('0.0.0.0', port = 5000)
